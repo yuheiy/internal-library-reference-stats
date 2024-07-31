@@ -1,0 +1,6 @@
+[submodule "user-repositories/internal-library-reference-stats-user-a"]
+	path = user-repositories/internal-library-reference-stats-user-a
+	url = https://github.com/yuheiy/internal-library-reference-stats-user-a
+[submodule "user-repositories/internal-library-reference-stats-user-b"]
+	path = user-repositories/internal-library-reference-stats-user-b
+	url = https://github.com/yuheiy/internal-library-reference-stats-user-b

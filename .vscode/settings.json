@@ -1,0 +1,19 @@
+{
+  /* Text Editor */
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never"
+  },
+  // https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#default-formatter
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  /* Text Editor > Formatting */
+  "editor.formatOnSave": true,
+
+  /* Features > Search */
+  "search.exclude": {
+    "user-repositories": true
+  },
+
+  /* Extensions > TypeScript */
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
