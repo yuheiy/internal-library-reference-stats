@@ -4,7 +4,6 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import pMemoize from 'p-memoize';
 import invariant from 'tiny-invariant';
-import { rootDirectoryPath } from './config';
 import type { LineRange } from './import-analyzer';
 
 const pExec = promisify(exec);
@@ -18,8 +17,10 @@ const pGitconfig = promisify(gitconfig);
  * // }
  * const submodules = await getSubmodules()
  */
-export async function getSubmodules() {
-  const config = await pGitconfig(rootDirectoryPath);
+export async function getSubmodules({ cwd }: { cwd?: string | undefined } = {}) {
+  cwd ??= process.cwd();
+
+  const config = await pGitconfig(cwd);
   const result = new Map<string, { url: string }>();
 
   for (const [name, { url }] of Object.entries<{ url: string; active?: boolean }>(
@@ -34,7 +35,8 @@ export async function getSubmodules() {
       throw new Error(`${url} is invalid value. Use HTTP protocol for submodule URLs.`);
     }
 
-    result.set(path.join(rootDirectoryPath, name), { url });
+    const absolutePath = path.join(cwd, name);
+    result.set(absolutePath, { url });
   }
 
   return result;
@@ -51,8 +53,8 @@ const memoizedGetCommitSha = pMemoize(getCommitSha, {
 
 export async function getRepositoryFor(fileOrDirectoryPath: string) {
   const submodules = await getSubmodules();
+  const inputPathSegments = fileOrDirectoryPath.split(path.sep);
   const targetSubmodule = [...submodules].find(([submodulePath]) => {
-    const inputPathSegments = fileOrDirectoryPath.split(path.sep);
     const submodulePathSegments = submodulePath.split(path.sep);
     return submodulePathSegments.every((segment, i) => segment === inputPathSegments[i]);
   });

@@ -2,11 +2,11 @@ import fg from 'fast-glob';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import pMap from 'p-map';
-import * as prettier from 'prettier';
 import { comparePaths } from './comparers';
-import { markdownConfig, rootDirectoryPath } from './config';
+import { markdownConfig, rootDirectoryPath, targetModuleName } from './config';
 import { getSubmodules } from './git';
 import { getNamedImportsStats } from './named-imports-stats';
+import { format } from './prettier';
 import { renderByModuleExportName, renderByUserPackage, renderReadme } from './renderers';
 
 async function main() {
@@ -14,12 +14,12 @@ async function main() {
 
   console.time('namedImportsStats');
 
-  const submodules = await getSubmodules();
+  const submodules = await getSubmodules({ cwd: rootDirectoryPath });
   const filePatterns = [...submodules.keys()].map((submodulePath) =>
     path.join(submodulePath, '**/*.{js,ts,jsx,tsx}'),
   );
   const filePaths = (await fg.glob(filePatterns)).toSorted(comparePaths);
-  const namedImportsStats = await getNamedImportsStats(filePaths);
+  const namedImportsStats = await getNamedImportsStats(filePaths, targetModuleName);
 
   console.timeEnd('namedImportsStats');
 
@@ -37,11 +37,7 @@ async function main() {
         updatedAt,
         namedImportsStats,
       });
-      const options = await prettier.resolveConfig(filePath);
-      const formattedContent = await prettier.format(content, {
-        ...options,
-        filepath: filePath,
-      });
+      const formattedContent = await format(content, { filepath: filePath });
       await fsPromises.writeFile(filePath, formattedContent);
 
       console.timeEnd(name);

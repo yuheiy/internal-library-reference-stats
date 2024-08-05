@@ -2,7 +2,6 @@ import path from 'node:path';
 import pMap from 'p-map';
 import invariant from 'tiny-invariant';
 import { comparePaths } from './comparers';
-import { targetModuleName } from './config';
 import { analyzeModuleImports, type LineRange } from './import-analyzer';
 import { memoizedPackageDirectory } from './package';
 import { promisedMapGroupBy } from './promise';
@@ -13,7 +12,7 @@ export type NamedImportsStat = {
   lineRange: LineRange;
 };
 
-export async function getNamedImportsStats(filePaths: string[]) {
+export async function getNamedImportsStats(filePaths: string[], targetModuleName: string) {
   const statsChunks = await pMap(filePaths, async (filePath) => {
     const { namedImports } = await analyzeModuleImports(filePath, targetModuleName);
     return Object.entries(namedImports).map(([moduleExportName, { lineRange }]) => ({

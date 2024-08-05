@@ -3,6 +3,7 @@ import path from 'node:path';
 import pMap from 'p-map';
 import {
   markdownConfig,
+  rootDirectoryPath,
   targetModuleName,
   targetModuleTitle,
   targetModuleUrl,
@@ -31,7 +32,7 @@ function renderReferencesHeadingContent(name: string, namedImportsStats: NamedIm
 }
 
 async function renderMeta({ updatedAt }: { updatedAt: Date }) {
-  const submodules = await getSubmodules();
+  const submodules = await getSubmodules({ cwd: rootDirectoryPath });
   const formattedDate = new Intl.DateTimeFormat('ja-JP', {
     dateStyle: 'long',
     timeStyle: 'long',
