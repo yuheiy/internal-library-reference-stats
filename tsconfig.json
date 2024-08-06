@@ -8,6 +8,7 @@
 
     /* Modules */
     "module": "Preserve",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
 
     /* JavaScript Support */
