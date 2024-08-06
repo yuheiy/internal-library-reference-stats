@@ -1,6 +1,7 @@
 name: Auto update
 
 on:
+  # TODO: uncomment to enable scheduled execution
   # schedule:
   #   - cron: '0 0 * * *'
   workflow_dispatch:
@@ -23,6 +24,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - name: Install dependencies
+        # TODO: set the module name to be analyzed
         run: |
           npm ci
           npm update antd
