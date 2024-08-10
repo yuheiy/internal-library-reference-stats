@@ -1,13 +1,8 @@
-import gitconfig from 'gitconfiglocal';
-import { exec } from 'node:child_process';
 import path from 'node:path';
-import { promisify } from 'node:util';
 import pMemoize from 'p-memoize';
 import invariant from 'tiny-invariant';
 import type { LineRange } from './import-analyzer';
-
-const pExec = promisify(exec);
-const pGitconfig = promisify(gitconfig);
+import { pExec, pGitconfig } from './promise';
 
 /**
  * @example

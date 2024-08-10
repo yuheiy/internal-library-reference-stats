@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import { comparePaths } from './comparers';
 import { analyzeModuleImports, type LineRange } from './import-analyzer';
 import { memoizedPackageDirectory } from './package';
-import { promisedMapGroupBy } from './promise';
+import { pMapGroupBy } from './promise';
 
 export type NamedImportsStat = {
   sourcePath: string;
@@ -50,7 +50,7 @@ export async function groupByUserPackage(
   namedImportsStats: NamedImportsStat[],
   ensureKeys: Set<string> = new Set(),
 ) {
-  const result = await promisedMapGroupBy(namedImportsStats, async ({ sourcePath }) => {
+  const result = await pMapGroupBy(namedImportsStats, async ({ sourcePath }) => {
     const directoryPath = await memoizedPackageDirectory({
       cwd: path.dirname(sourcePath),
     });
