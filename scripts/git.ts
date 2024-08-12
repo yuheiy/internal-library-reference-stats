@@ -45,7 +45,7 @@ const memoizedGetCommitSha = pMemoize(getCommitSha, {
 export async function getRepositoryFor(fileOrDirectoryPath: string) {
   const submodules = await getSubmodules();
   const inputPathSegments = fileOrDirectoryPath.split(path.sep);
-  const targetSubmodule = [...submodules].find(([submodulePath]) => {
+  const targetSubmodule = Array.from(submodules).find(([submodulePath]) => {
     const submodulePathSegments = submodulePath.split(path.posix.sep);
     return submodulePathSegments.every((segment, i) => segment === inputPathSegments[i]);
   });

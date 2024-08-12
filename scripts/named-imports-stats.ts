@@ -39,7 +39,7 @@ export function groupByModuleExportName(
   }
 
   const sortedResult = new Map(
-    [...result].toSorted(([a], [b]) =>
+    Array.from(result).toSorted(([a], [b]) =>
       a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }),
     ),
   );
@@ -65,7 +65,7 @@ export async function groupByUserPackage(
   }
 
   const sortedResult = new Map(
-    [...result].toSorted(([a], [b]) =>
+    Array.from(result).toSorted(([a], [b]) =>
       comparePaths(path.join(a, 'package.json'), path.join(b, 'package.json')),
     ),
   );

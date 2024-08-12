@@ -15,7 +15,7 @@ async function main() {
   console.time('namedImportsStats');
 
   const submodules = await getSubmodules({ cwd: rootDirectoryPath });
-  const filePatterns = [...submodules.keys()].map((submodulePath) =>
+  const filePatterns = Array.from(submodules.keys(), (submodulePath) =>
     path.join(submodulePath, '**/*.{js,ts,jsx,tsx}'),
   );
   const filePaths = (await fg.glob(filePatterns)).toSorted(comparePaths);

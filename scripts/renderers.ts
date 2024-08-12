@@ -103,9 +103,10 @@ export async function renderReadme({
       async ([moduleExportName, namedImportsStats]) => {
         const subpageHeading = renderReferencesHeadingContent(moduleExportName, namedImportsStats);
         const header = `[${moduleExportName}](${markdownConfig.byModuleExportName.name}#${slugger.slug(subpageHeading)})`;
-        const totalPerUserPackage = [
-          ...(await groupByUserPackage(namedImportsStats, new Set(byUserPackage.keys()))).values(),
-        ].map((namedImportsStats) => namedImportsStats.length);
+        const totalPerUserPackage = Array.from(
+          (await groupByUserPackage(namedImportsStats, new Set(byUserPackage.keys()))).values(),
+          (namedImportsStats) => namedImportsStats.length,
+        );
         const lines: (string | number)[] = [
           header,
           ...totalPerUserPackage,
@@ -114,7 +115,8 @@ export async function renderReadme({
         return lines;
       },
     );
-    const totalPerUserPackage = [...byUserPackage.values()].map(
+    const totalPerUserPackage = Array.from(
+      byUserPackage.values(),
       (namedImportsStats) => namedImportsStats.length,
     );
     const totalRow = [
@@ -156,18 +158,20 @@ export async function renderByModuleExportName({
     new Set(Object.keys(await import(targetModuleName))),
   );
   const byReferenced = new Map(
-    [...byModuleExportName].filter(([, namedImportsStats]) => namedImportsStats.length > 0),
+    Array.from(byModuleExportName).filter(([, namedImportsStats]) => namedImportsStats.length > 0),
   );
   const byUnreferenced = new Map(
-    [...byModuleExportName].filter(([, namedImportsStats]) => namedImportsStats.length === 0),
+    Array.from(byModuleExportName).filter(
+      ([, namedImportsStats]) => namedImportsStats.length === 0,
+    ),
   );
 
   const sectionChunks = await pMap(
-    [...byReferenced].toSorted(([, a], [, b]) => b.length - a.length),
+    Array.from(byReferenced).toSorted(([, a], [, b]) => b.length - a.length),
     async ([moduleExportName, namedImportsStats]) => {
       const heading = renderReferencesHeadingContent(moduleExportName, namedImportsStats);
       const sectionChunks = await pMap(
-        [...(await groupByUserPackage(namedImportsStats))].toSorted(
+        Array.from(await groupByUserPackage(namedImportsStats)).toSorted(
           ([, a], [, b]) => b.length - a.length,
         ),
         async ([userPackageDirectoryPath, namedImportsStats]) => {
@@ -207,7 +211,7 @@ export async function renderByModuleExportName({
     const unreferencedSection = [
       '## 未参照のモジュール',
       '',
-      ...[...byUnreferenced.keys()].map((moduleExportName) => `- ${moduleExportName}`),
+      ...Array.from(byUnreferenced.keys(), (moduleExportName) => `- ${moduleExportName}`),
     ];
     lines = concatChunksWithBlanks(lines, unreferencedSection);
   }
@@ -225,12 +229,12 @@ export async function renderByUserPackage({
   const byUserPackage = await groupByUserPackage(namedImportsStats);
 
   const sectionChunks = await pMap(
-    [...byUserPackage].toSorted(([, a], [, b]) => b.length - a.length),
+    Array.from(byUserPackage).toSorted(([, a], [, b]) => b.length - a.length),
     async ([userPackageDirectoryPath, namedImportsStats]) => {
       const name = await getUserPackageName(userPackageDirectoryPath);
       const heading = renderReferencesHeadingContent(name, namedImportsStats);
       const sectionChunks = await pMap(
-        [...groupByModuleExportName(namedImportsStats)].toSorted(
+        Array.from(groupByModuleExportName(namedImportsStats)).toSorted(
           ([, a], [, b]) => b.length - a.length,
         ),
         async ([moduleExportName, namedImportsStats]) => {
