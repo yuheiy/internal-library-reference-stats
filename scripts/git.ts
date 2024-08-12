@@ -16,21 +16,17 @@ export async function getSubmodules({ cwd }: { cwd?: string | undefined } = {}) 
   cwd ??= process.cwd();
 
   const config = await pGitconfig(cwd);
-  const result = new Map<string, { url: string }>();
+  const result = new Map<string, { url: URL }>();
 
-  for (const [name, { url }] of Object.entries<{ url: string; active?: boolean }>(
+  for (const [name, data] of Object.entries<{ url: string; active?: boolean }>(
     config['submodule'],
   )) {
     if (name === 'active') {
       continue;
     }
 
-    if (!URL.canParse(url)) {
-      // Throw an error if the SSH protocol value is set.
-      throw new Error(`${url} is invalid value. Use HTTP protocol for submodule URLs.`);
-    }
-
     const absolutePath = path.join(cwd, name);
+    const url = new URL(data.url);
     result.set(absolutePath, { url });
   }
 
@@ -50,7 +46,7 @@ export async function getRepositoryFor(fileOrDirectoryPath: string) {
   const submodules = await getSubmodules();
   const inputPathSegments = fileOrDirectoryPath.split(path.sep);
   const targetSubmodule = [...submodules].find(([submodulePath]) => {
-    const submodulePathSegments = submodulePath.split(path.sep);
+    const submodulePathSegments = submodulePath.split(path.posix.sep);
     return submodulePathSegments.every((segment, i) => segment === inputPathSegments[i]);
   });
   invariant(targetSubmodule);
@@ -59,7 +55,7 @@ export async function getRepositoryFor(fileOrDirectoryPath: string) {
   return {
     path: submodulePath,
     url,
-    name: new URL(url).pathname.slice(1),
+    name: url.pathname.slice(1),
     commitSha: await memoizedGetCommitSha({ cwd: submodulePath }),
   };
 }
@@ -71,9 +67,9 @@ export async function getGithubUrlFor(
   const repository = await getRepositoryFor(fileOrDirectoryPath);
   const relativePath = path.relative(repository.path, fileOrDirectoryPath);
 
-  let result = `${repository.url}/tree/${repository.commitSha}/${relativePath}`;
+  const url = new URL(`${repository.url}/tree/${repository.commitSha}/${relativePath}`);
   if (lineRange) {
-    result += `#L${lineRange.start}-L${lineRange.end}`;
+    url.hash = `L${lineRange.start}-L${lineRange.end}`;
   }
-  return result;
+  return url;
 }
