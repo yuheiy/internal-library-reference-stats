@@ -6,7 +6,7 @@ export async function format(
 ) {
   const file = options.filepath;
   const config = file ? await prettier.resolveConfig(file, options) : undefined;
-  return prettier.format(String(source), {
+  return await prettier.format(String(source), {
     ...config,
     ...options,
     filepath: file!,
