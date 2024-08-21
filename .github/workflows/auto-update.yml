@@ -27,7 +27,7 @@ jobs:
         # TODO: set the module name to be analyzed
         run: |
           npm ci
-          npm update antd
+          npm install antd@latest
       - name: Test
         run: npm run test
       - name: Build
