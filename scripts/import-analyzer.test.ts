@@ -77,7 +77,10 @@ test('analyzeModuleImports', async (t) => {
     ],
   ] as const) {
     await t.test(name, async () => {
-      const filePath = path.join(import.meta.dirname, `./__fixtures__/${name}.ts`);
+      const filePath = path.join(
+        import.meta.dirname,
+        `./__fixtures__/${name}.ts`,
+      );
       const targetModuleName = 'module-name';
       const actual = await analyzeModuleImports(filePath, targetModuleName);
       assert.deepStrictEqual(actual, expected);

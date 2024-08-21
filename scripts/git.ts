@@ -12,7 +12,9 @@ import { pExec, pGitconfig } from './promise';
  * // }
  * const submodules = await getSubmodules()
  */
-export async function getSubmodules({ cwd }: { cwd?: string | undefined } = {}) {
+export async function getSubmodules({
+  cwd,
+}: { cwd?: string | undefined } = {}) {
   cwd ??= process.cwd();
 
   const config = await pGitconfig(cwd);
@@ -34,7 +36,10 @@ export async function getSubmodules({ cwd }: { cwd?: string | undefined } = {}) 
 }
 
 async function getCommitSha({ cwd }: { cwd?: string | URL | undefined } = {}) {
-  const { stdout } = await pExec('git rev-parse HEAD', { cwd, encoding: 'utf8' });
+  const { stdout } = await pExec('git rev-parse HEAD', {
+    cwd,
+    encoding: 'utf8',
+  });
   return stdout.trim();
 }
 
@@ -47,7 +52,9 @@ export async function getRepositoryFor(fileOrDirectoryPath: string) {
   const inputPathSegments = fileOrDirectoryPath.split(path.sep);
   const targetSubmodule = Array.from(submodules).find(([submodulePath]) => {
     const submodulePathSegments = submodulePath.split(path.posix.sep);
-    return submodulePathSegments.every((segment, i) => segment === inputPathSegments[i]);
+    return submodulePathSegments.every(
+      (segment, i) => segment === inputPathSegments[i],
+    );
   });
   invariant(targetSubmodule);
   const [submodulePath, { url }] = targetSubmodule;
@@ -67,7 +74,9 @@ export async function getGithubUrlFor(
   const repository = await getRepositoryFor(fileOrDirectoryPath);
   const relativePath = path.relative(repository.path, fileOrDirectoryPath);
 
-  const url = new URL(`${repository.url}/tree/${repository.commitSha}/${relativePath}`);
+  const url = new URL(
+    `${repository.url}/tree/${repository.commitSha}/${relativePath}`,
+  );
   url.hash = lineRange ? `L${lineRange.start}-L${lineRange.end}` : '';
   return url;
 }

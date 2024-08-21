@@ -38,7 +38,10 @@ async function getFileOrDirectoryLink(
       return await getGithubUrlFor(fileOrDirectoryPath, lineRange);
 
     case 'relative': {
-      const relativePath = path.relative(rootDirectoryPath, fileOrDirectoryPath);
+      const relativePath = path.relative(
+        rootDirectoryPath,
+        fileOrDirectoryPath,
+      );
       const hash = lineRange ? `#L${lineRange.start}` : '';
       return relativePath + hash;
     }
@@ -48,7 +51,10 @@ async function getFileOrDirectoryLink(
   }
 }
 
-function renderReferencesHeadingContent(name: string, namedImportsStats: NamedImportsStat[]) {
+function renderReferencesHeadingContent(
+  name: string,
+  namedImportsStats: NamedImportsStat[],
+) {
   return `${name} (${namedImportsStats.length})`;
 }
 
@@ -76,7 +82,9 @@ async function renderUserPackageMeta(directoryPath: string) {
   const repository = await getRepositoryFor(directoryPath);
   const userPackagePath = path.relative(repository.path, directoryPath);
   const userPackageLink = await getFileOrDirectoryLink(directoryPath);
-  const version = await getDependencyVersion(targetModuleName, { cwd: directoryPath });
+  const version = await getDependencyVersion(targetModuleName, {
+    cwd: directoryPath,
+  });
 
   const lines: string[] = [
     `- 対象リポジトリ: [${repository.name}](${repository.url})`,
@@ -110,7 +118,10 @@ export async function renderReadme({
       byUserPackage,
       async ([userPackageDirectoryPath, namedImportsStats]) => {
         const name = await getUserPackageName(userPackageDirectoryPath);
-        const subpageHeading = renderReferencesHeadingContent(name, namedImportsStats);
+        const subpageHeading = renderReferencesHeadingContent(
+          name,
+          namedImportsStats,
+        );
         return `[${name}](${markdownConfig.byUserPackage.name}#${slugger.slug(subpageHeading)})`;
       },
     );
@@ -122,10 +133,18 @@ export async function renderReadme({
     const rowsPerModuleExportName = await pMap(
       byModuleExportName,
       async ([moduleExportName, namedImportsStats]) => {
-        const subpageHeading = renderReferencesHeadingContent(moduleExportName, namedImportsStats);
+        const subpageHeading = renderReferencesHeadingContent(
+          moduleExportName,
+          namedImportsStats,
+        );
         const header = `[${moduleExportName}](${markdownConfig.byModuleExportName.name}#${slugger.slug(subpageHeading)})`;
         const totalPerUserPackage = Array.from(
-          (await groupByUserPackage(namedImportsStats, new Set(byUserPackage.keys()))).values(),
+          (
+            await groupByUserPackage(
+              namedImportsStats,
+              new Set(byUserPackage.keys()),
+            )
+          ).values(),
           (namedImportsStats) => namedImportsStats.length,
         );
         const lines: (string | number)[] = [
@@ -179,7 +198,9 @@ export async function renderByModuleExportName({
     new Set(Object.keys(await import(targetModuleName))),
   );
   const byReferenced = new Map(
-    Array.from(byModuleExportName).filter(([, namedImportsStats]) => namedImportsStats.length > 0),
+    Array.from(byModuleExportName).filter(
+      ([, namedImportsStats]) => namedImportsStats.length > 0,
+    ),
   );
   const byUnreferenced = new Map(
     Array.from(byModuleExportName).filter(
@@ -190,19 +211,31 @@ export async function renderByModuleExportName({
   const sectionChunks = await pMap(
     Array.from(byReferenced).toSorted(([, a], [, b]) => b.length - a.length),
     async ([moduleExportName, namedImportsStats]) => {
-      const heading = renderReferencesHeadingContent(moduleExportName, namedImportsStats);
+      const heading = renderReferencesHeadingContent(
+        moduleExportName,
+        namedImportsStats,
+      );
       const sectionChunks = await pMap(
         Array.from(await groupByUserPackage(namedImportsStats)).toSorted(
           ([, a], [, b]) => b.length - a.length,
         ),
         async ([userPackageDirectoryPath, namedImportsStats]) => {
           const name = await getUserPackageName(userPackageDirectoryPath);
-          const heading = renderReferencesHeadingContent(name, namedImportsStats);
-          const references = await pMap(namedImportsStats, async ({ sourcePath, lineRange }) => {
-            const relativePath = path.relative(userPackageDirectoryPath, sourcePath);
-            const link = await getFileOrDirectoryLink(sourcePath, lineRange);
-            return `- [${relativePath}](${link})`;
-          });
+          const heading = renderReferencesHeadingContent(
+            name,
+            namedImportsStats,
+          );
+          const references = await pMap(
+            namedImportsStats,
+            async ({ sourcePath, lineRange }) => {
+              const relativePath = path.relative(
+                userPackageDirectoryPath,
+                sourcePath,
+              );
+              const link = await getFileOrDirectoryLink(sourcePath, lineRange);
+              return `- [${relativePath}](${link})`;
+            },
+          );
           const lines: string[] = [
             `### ${heading}`,
             '',
@@ -215,7 +248,11 @@ export async function renderByModuleExportName({
           return lines;
         },
       );
-      const lines: string[] = [`## ${heading}`, '', ...concatChunksWithBlanks(...sectionChunks)];
+      const lines: string[] = [
+        `## ${heading}`,
+        '',
+        ...concatChunksWithBlanks(...sectionChunks),
+      ];
       return lines;
     },
   );
@@ -232,7 +269,10 @@ export async function renderByModuleExportName({
     const unreferencedSection = [
       '## 未参照のモジュール',
       '',
-      ...Array.from(byUnreferenced.keys(), (moduleExportName) => `- ${moduleExportName}`),
+      ...Array.from(
+        byUnreferenced.keys(),
+        (moduleExportName) => `- ${moduleExportName}`,
+      ),
     ];
     lines = concatChunksWithBlanks(lines, unreferencedSection);
   }
@@ -259,12 +299,21 @@ export async function renderByUserPackage({
           ([, a], [, b]) => b.length - a.length,
         ),
         async ([moduleExportName, namedImportsStats]) => {
-          const heading = renderReferencesHeadingContent(moduleExportName, namedImportsStats);
-          const references = await pMap(namedImportsStats, async ({ sourcePath, lineRange }) => {
-            const relativePath = path.relative(userPackageDirectoryPath, sourcePath);
-            const link = await getFileOrDirectoryLink(sourcePath, lineRange);
-            return `- [${relativePath}](${link})`;
-          });
+          const heading = renderReferencesHeadingContent(
+            moduleExportName,
+            namedImportsStats,
+          );
+          const references = await pMap(
+            namedImportsStats,
+            async ({ sourcePath, lineRange }) => {
+              const relativePath = path.relative(
+                userPackageDirectoryPath,
+                sourcePath,
+              );
+              const link = await getFileOrDirectoryLink(sourcePath, lineRange);
+              return `- [${relativePath}](${link})`;
+            },
+          );
           const lines: string[] = [`### ${heading}`, '', ...references];
           return lines;
         },

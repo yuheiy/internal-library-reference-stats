@@ -36,7 +36,10 @@ import { sep } from 'node:path';
 
 // A collator with numeric sorting enabled, and no sensitivity to case, accents or diacritics.
 const intlFileNameCollatorBaseNumeric = (() => {
-  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+  const collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: 'base',
+  });
   return {
     collator,
     collatorIsNumeric: collator.resolvedOptions().numeric,
@@ -54,14 +57,22 @@ function compareFileNames(
   const result = intlFileNameCollatorBaseNumeric.collator.compare(a, b);
 
   // Using the numeric option will make compare(`foo1`, `foo01`) === 0. Disambiguate.
-  if (intlFileNameCollatorBaseNumeric.collatorIsNumeric && result === 0 && a !== b) {
+  if (
+    intlFileNameCollatorBaseNumeric.collatorIsNumeric &&
+    result === 0 &&
+    a !== b
+  ) {
     return a < b ? -1 : 1;
   }
 
   return result;
 }
 
-function comparePathComponents(one: string, other: string, caseSensitive = false): number {
+function comparePathComponents(
+  one: string,
+  other: string,
+  caseSensitive = false,
+): number {
   if (!caseSensitive) {
     one = one && one.toLowerCase();
     other = other && other.toLowerCase();
@@ -74,7 +85,11 @@ function comparePathComponents(one: string, other: string, caseSensitive = false
   return one < other ? -1 : 1;
 }
 
-export function comparePaths(one: string, other: string, caseSensitive = false): number {
+export function comparePaths(
+  one: string,
+  other: string,
+  caseSensitive = false,
+): number {
   const oneParts = one.split(sep);
   const otherParts = other.split(sep);
 
@@ -94,7 +109,11 @@ export function comparePaths(one: string, other: string, caseSensitive = false):
       return 1;
     }
 
-    const result = comparePathComponents(oneParts[i]!, otherParts[i]!, caseSensitive);
+    const result = comparePathComponents(
+      oneParts[i]!,
+      otherParts[i]!,
+      caseSensitive,
+    );
 
     if (result !== 0) {
       return result;

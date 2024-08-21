@@ -12,17 +12,28 @@ export type NamedImportsStat = {
   lineRange: LineRange;
 };
 
-export async function getNamedImportsStats(filePaths: string[], targetModuleName: string) {
+export async function getNamedImportsStats(
+  filePaths: string[],
+  targetModuleName: string,
+) {
   const statsChunks = await pMap(filePaths, async (filePath) => {
-    const { namedImports } = await analyzeModuleImports(filePath, targetModuleName);
-    return Object.entries(namedImports).map(([moduleExportName, { lineRange }]) => ({
-      sourcePath: filePath,
-      moduleExportName,
-      lineRange,
-    }));
+    const { namedImports } = await analyzeModuleImports(
+      filePath,
+      targetModuleName,
+    );
+    return Object.entries(namedImports).map(
+      ([moduleExportName, { lineRange }]) => ({
+        sourcePath: filePath,
+        moduleExportName,
+        lineRange,
+      }),
+    );
   });
 
-  const result: NamedImportsStat[] = statsChunks.reduce((acc, chunk) => [...acc, ...chunk]);
+  const result: NamedImportsStat[] = statsChunks.reduce((acc, chunk) => [
+    ...acc,
+    ...chunk,
+  ]);
   return result;
 }
 
@@ -30,7 +41,10 @@ export function groupByModuleExportName(
   namedImportsStats: NamedImportsStat[],
   ensureKeys: Set<string> = new Set(),
 ) {
-  const result = Map.groupBy(namedImportsStats, ({ moduleExportName }) => moduleExportName);
+  const result = Map.groupBy(
+    namedImportsStats,
+    ({ moduleExportName }) => moduleExportName,
+  );
 
   for (const key of ensureKeys) {
     if (!result.has(key)) {
@@ -50,13 +64,16 @@ export async function groupByUserPackage(
   namedImportsStats: NamedImportsStat[],
   ensureKeys: Set<string> = new Set(),
 ) {
-  const result = await pMapGroupBy(namedImportsStats, async ({ sourcePath }) => {
-    const directoryPath = await memoizedPackageDirectory({
-      cwd: path.dirname(sourcePath),
-    });
-    invariant(directoryPath);
-    return directoryPath;
-  });
+  const result = await pMapGroupBy(
+    namedImportsStats,
+    async ({ sourcePath }) => {
+      const directoryPath = await memoizedPackageDirectory({
+        cwd: path.dirname(sourcePath),
+      });
+      invariant(directoryPath);
+      return directoryPath;
+    },
+  );
 
   for (const key of ensureKeys) {
     if (!result.has(key)) {

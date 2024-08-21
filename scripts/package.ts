@@ -15,5 +15,8 @@ export async function getDependencyVersion(
   { cwd }: { cwd?: string | URL | undefined } = {},
 ) {
   const result = await memoizedReadPackageUp(cwd ? { cwd } : {});
-  return result?.packageJson.dependencies?.[name] ?? result?.packageJson.devDependencies?.[name];
+  return (
+    result?.packageJson.dependencies?.[name] ??
+    result?.packageJson.devDependencies?.[name]
+  );
 }

@@ -16,9 +16,17 @@ export type ImportAnalysis = {
 /**
  * Analyzes a TypeScript file and extracts import information for a specified module
  */
-export async function analyzeModuleImports(filePath: string, targetModuleName: string) {
+export async function analyzeModuleImports(
+  filePath: string,
+  targetModuleName: string,
+) {
   const fileContent = await fsPromises.readFile(filePath, 'utf8');
-  const sourceFile = ts.createSourceFile(filePath, fileContent, ts.ScriptTarget.Latest, true);
+  const sourceFile = ts.createSourceFile(
+    filePath,
+    fileContent,
+    ts.ScriptTarget.Latest,
+    true,
+  );
 
   const importAnalysis: ImportAnalysis = {
     defaultImport: null,
@@ -32,8 +40,10 @@ export async function analyzeModuleImports(filePath: string, targetModuleName: s
       const moduleSpecifier = node.moduleSpecifier.getText().slice(1, -1); // Remove quotes
 
       if (moduleSpecifier === targetModuleName) {
-        const start = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
-        const end = sourceFile.getLineAndCharacterOfPosition(node.getEnd()).line + 1;
+        const start =
+          sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
+        const end =
+          sourceFile.getLineAndCharacterOfPosition(node.getEnd()).line + 1;
         const lineRange: LineRange = { start, end };
 
         const importClause = node.importClause;
@@ -51,7 +61,8 @@ export async function analyzeModuleImports(filePath: string, targetModuleName: s
               importAnalysis.namespacedImport = { lineRange };
             } else if (ts.isNamedImports(importClause.namedBindings)) {
               importClause.namedBindings.elements.forEach((element) => {
-                const importName = element.propertyName?.text ?? element.name.text;
+                const importName =
+                  element.propertyName?.text ?? element.name.text;
                 if (!(importName in importAnalysis.namedImports)) {
                   importAnalysis.namedImports[importName] = { lineRange };
                 }

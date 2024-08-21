@@ -7,7 +7,11 @@ import { markdownConfig, rootDirectoryPath, targetModuleName } from './config';
 import { getSubmodules } from './git';
 import { getNamedImportsStats } from './named-imports-stats';
 import { format } from './prettier';
-import { renderByModuleExportName, renderByUserPackage, renderReadme } from './renderers';
+import {
+  renderByModuleExportName,
+  renderByUserPackage,
+  renderReadme,
+} from './renderers';
 
 async function main() {
   const updatedAt = new Date();
@@ -19,7 +23,10 @@ async function main() {
     path.join(submodulePath, '**/*.{js,ts,jsx,tsx}'),
   );
   const filePaths = (await fg.glob(filePatterns)).toSorted(comparePaths);
-  const namedImportsStats = await getNamedImportsStats(filePaths, targetModuleName);
+  const namedImportsStats = await getNamedImportsStats(
+    filePaths,
+    targetModuleName,
+  );
 
   console.timeEnd('namedImportsStats');
 
