@@ -1,3 +1,4 @@
+import { isCI } from 'ci-info';
 import path from 'node:path';
 import pkg from '../package.json';
 
@@ -9,6 +10,9 @@ export const targetModuleTitle = 'Ant Design';
 
 // TODO: set the URL of the module to be output in `README.md`
 export const targetModuleUrl = 'https://github.com/ant-design/ant-design';
+
+type LinkMode = 'github' | 'relative';
+export const linkMode: LinkMode = isCI ? 'github' : 'relative';
 
 export const rootDirectoryPath = path.join(import.meta.dirname, '..');
 

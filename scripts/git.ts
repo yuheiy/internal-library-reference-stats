@@ -68,8 +68,6 @@ export async function getGithubUrlFor(
   const relativePath = path.relative(repository.path, fileOrDirectoryPath);
 
   const url = new URL(`${repository.url}/tree/${repository.commitSha}/${relativePath}`);
-  if (lineRange) {
-    url.hash = `L${lineRange.start}-L${lineRange.end}`;
-  }
+  url.hash = lineRange ? `L${lineRange.start}-L${lineRange.end}` : '';
   return url;
 }

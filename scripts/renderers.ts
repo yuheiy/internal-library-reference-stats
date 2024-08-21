@@ -2,6 +2,7 @@ import GithubSlugger from 'github-slugger';
 import path from 'node:path';
 import pMap from 'p-map';
 import {
+  linkMode,
   markdownConfig,
   rootDirectoryPath,
   targetModuleName,
@@ -10,6 +11,7 @@ import {
   userPackageNameMap,
 } from './config';
 import { getGithubUrlFor, getRepositoryFor, getSubmodules } from './git';
+import type { LineRange } from './import-analyzer';
 import {
   groupByModuleExportName,
   groupByUserPackage,
@@ -25,6 +27,25 @@ async function getUserPackageName(directoryPath: string) {
 
   const repository = await getRepositoryFor(directoryPath);
   return path.relative(path.join(repository.path, '..'), directoryPath);
+}
+
+async function getFileOrDirectoryLink(
+  fileOrDirectoryPath: string,
+  lineRange?: LineRange | undefined,
+) {
+  switch (linkMode) {
+    case 'github':
+      return await getGithubUrlFor(fileOrDirectoryPath, lineRange);
+
+    case 'relative': {
+      const relativePath = path.relative(rootDirectoryPath, fileOrDirectoryPath);
+      const hash = lineRange ? `#L${lineRange.start}` : '';
+      return relativePath + hash;
+    }
+
+    default:
+      throw new TypeError(linkMode satisfies never);
+  }
 }
 
 function renderReferencesHeadingContent(name: string, namedImportsStats: NamedImportsStat[]) {
@@ -54,12 +75,12 @@ async function renderMeta({ updatedAt }: { updatedAt: Date }) {
 async function renderUserPackageMeta(directoryPath: string) {
   const repository = await getRepositoryFor(directoryPath);
   const userPackagePath = path.relative(repository.path, directoryPath);
-  const userPackageUrl = await getGithubUrlFor(directoryPath);
+  const userPackageLink = await getFileOrDirectoryLink(directoryPath);
   const version = await getDependencyVersion(targetModuleName, { cwd: directoryPath });
 
   const lines: string[] = [
     `- 対象リポジトリ: [${repository.name}](${repository.url})`,
-    `- 対象ディレクトリ: [${userPackagePath !== '' ? userPackagePath : '.'}](${userPackageUrl})`,
+    `- 対象ディレクトリ: [${userPackagePath !== '' ? userPackagePath : '.'}](${userPackageLink})`,
     `- ${targetModuleName}のバージョン: ${version ?? '不明'}`,
   ];
 
@@ -179,8 +200,8 @@ export async function renderByModuleExportName({
           const heading = renderReferencesHeadingContent(name, namedImportsStats);
           const references = await pMap(namedImportsStats, async ({ sourcePath, lineRange }) => {
             const relativePath = path.relative(userPackageDirectoryPath, sourcePath);
-            const url = await getGithubUrlFor(sourcePath, lineRange);
-            return `- [${relativePath}](${url})`;
+            const link = await getFileOrDirectoryLink(sourcePath, lineRange);
+            return `- [${relativePath}](${link})`;
           });
           const lines: string[] = [
             `### ${heading}`,
@@ -241,8 +262,8 @@ export async function renderByUserPackage({
           const heading = renderReferencesHeadingContent(moduleExportName, namedImportsStats);
           const references = await pMap(namedImportsStats, async ({ sourcePath, lineRange }) => {
             const relativePath = path.relative(userPackageDirectoryPath, sourcePath);
-            const url = await getGithubUrlFor(sourcePath, lineRange);
-            return `- [${relativePath}](${url})`;
+            const link = await getFileOrDirectoryLink(sourcePath, lineRange);
+            return `- [${relativePath}](${link})`;
           });
           const lines: string[] = [`### ${heading}`, '', ...references];
           return lines;
