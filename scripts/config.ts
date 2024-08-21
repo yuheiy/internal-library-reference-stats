@@ -38,7 +38,7 @@ for (const [directoryPath, name] of [
     '../user-repositories/internal-library-reference-stats-user-b',
     'User B',
   ],
-] as const) {
+] satisfies [string, string][]) {
   const absolutePath = path.join(import.meta.dirname, directoryPath);
   userPackageNameMap.set(absolutePath, name);
 }
