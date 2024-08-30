@@ -1,4 +1,3 @@
-import { isCI } from 'ci-info';
 import path from 'node:path';
 import pkg from '../package.json';
 
@@ -12,7 +11,8 @@ export const targetModuleTitle = 'Ant Design';
 export const targetModuleUrl = 'https://github.com/ant-design/ant-design';
 
 type LinkMode = 'github' | 'relative';
-export const linkMode: LinkMode = isCI ? 'github' : 'relative';
+export const linkMode: LinkMode =
+  process.env['LINK_MODE'] === 'relative' ? 'relative' : 'github';
 
 export const rootDirectoryPath = path.join(import.meta.dirname, '..');
 

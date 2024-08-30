@@ -15,7 +15,6 @@
     "@types/gitconfiglocal": "2.0.3",
     "@types/node": "22.5.0",
     "antd": "5.20.2",
-    "ci-info": "4.0.0",
     "fast-glob": "3.3.2",
     "gitconfiglocal": "2.1.0",
     "github-slugger": "2.0.0",
