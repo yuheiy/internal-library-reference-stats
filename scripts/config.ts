@@ -20,25 +20,15 @@ export const rootDirectoryPath = path.join(import.meta.dirname, '..');
 export const userPackageNameMap = new Map<string, string>();
 
 // TODO: set the display name of the user packages
-// prettier-ignore
-for (const [directoryPath, name] of [
-  [
-    '../user-repositories/internal-library-reference-stats-user-a/systems/plum/packages/front',
+for (const [directoryPath, name] of Object.entries({
+  '../user-repositories/internal-library-reference-stats-user-a/systems/plum/packages/front':
     '梅',
-  ],
-  [
-    '../user-repositories/internal-library-reference-stats-user-a/systems/shiratama/packages/front',
+  '../user-repositories/internal-library-reference-stats-user-a/systems/shiratama/packages/front':
     '白玉',
-  ],
-  [
-    '../user-repositories/internal-library-reference-stats-user-a/systems/vinegar/packages/front',
+  '../user-repositories/internal-library-reference-stats-user-a/systems/vinegar/packages/front':
     '酢',
-  ],
-  [
-    '../user-repositories/internal-library-reference-stats-user-b',
-    'User B',
-  ],
-] satisfies [string, string][]) {
+  '../user-repositories/internal-library-reference-stats-user-b': 'User B',
+})) {
   const absolutePath = path.join(import.meta.dirname, directoryPath);
   userPackageNameMap.set(absolutePath, name);
 }
