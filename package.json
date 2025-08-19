@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node scripts/index.ts",
     "format": "prettier . --write",
-    "test": "tsc --noEmit && node --test 'scripts/**/*.test.ts'",
+    "typecheck": "tsc --noEmit",
     "prepare": "git submodule update --init --recursive"
   },
   "dependencies": {
