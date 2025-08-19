@@ -1,4 +1,4 @@
-import fg from 'fast-glob';
+import { globSync } from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import pMap from 'p-map';
@@ -26,7 +26,7 @@ async function main() {
   const filePatterns = Array.from(submodules.keys(), (submodulePath) =>
     path.join(submodulePath, '**/*.{js,ts,jsx,tsx}'),
   );
-  const filePaths = (await fg.glob(filePatterns)).toSorted(comparePaths);
+  const filePaths = filePatterns.flatMap(pattern => globSync(pattern)).toSorted(comparePaths);
   const namedImportsStats = getNamedImportsStats(
     filePaths,
     targetModuleName,

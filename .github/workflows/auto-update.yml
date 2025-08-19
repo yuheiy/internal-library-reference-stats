@@ -25,10 +25,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        # TODO: set the module name to be analyzed
-        run: |
-          npm ci --omit=dev
-          npm install antd@latest
+        run: npm ci --omit=dev
 
       - name: Build
         run: npm run build

@@ -1,5 +1,5 @@
 import pMemoize from 'p-memoize';
-import { packageDirectory } from 'pkg-dir';
+import { packageDirectory } from 'package-directory';
 import { readPackageUp } from 'read-package-up';
 
 export const memoizedPackageDirectory = pMemoize(packageDirectory, {
