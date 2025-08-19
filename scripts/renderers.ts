@@ -109,7 +109,7 @@ export async function renderReadme({
   const byUserPackage = await groupByUserPackage(namedImportsStats);
   const byModuleExportName = groupByModuleExportName(
     namedImportsStats,
-    new Set(Object.keys(await import(targetModuleName))),
+    new Set(Object.keys(await import(targetModuleName)).filter(key => key !== '__esModule' && key !== 'default')),
   );
 
   const columns: string[] = await (async () => {
@@ -195,7 +195,7 @@ export async function renderByModuleExportName({
 }) {
   const byModuleExportName = groupByModuleExportName(
     namedImportsStats,
-    new Set(Object.keys(await import(targetModuleName))),
+    new Set(Object.keys(await import(targetModuleName)).filter(key => key !== '__esModule' && key !== 'default')),
   );
   const byReferenced = new Map(
     Array.from(byModuleExportName).filter(
