@@ -1,10 +1,10 @@
 import path from 'node:path';
 import pMap from 'p-map';
 import invariant from 'tiny-invariant';
-import { comparePaths } from './comparers';
-import { analyzeModuleImports, type LineRange } from './import-analyzer';
-import { memoizedPackageDirectory } from './package';
-import { pMapGroupBy } from './promise';
+import { comparePaths } from './comparers.ts';
+import { analyzeModuleImports, type LineRange } from './import-analyzer.ts';
+import { memoizedPackageDirectory } from './package.ts';
+import { pMapGroupBy } from './promise.ts';
 
 export type NamedImportsStat = {
   sourcePath: string;

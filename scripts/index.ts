@@ -2,16 +2,20 @@ import fg from 'fast-glob';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import pMap from 'p-map';
-import { comparePaths } from './comparers';
-import { markdownConfig, rootDirectoryPath, targetModuleName } from './config';
-import { getSubmodules } from './git';
-import { getNamedImportsStats } from './named-imports-stats';
-import { format } from './prettier';
+import { comparePaths } from './comparers.ts';
+import {
+  markdownConfig,
+  rootDirectoryPath,
+  targetModuleName,
+} from './config.ts';
+import { getSubmodules } from './git.ts';
+import { getNamedImportsStats } from './named-imports-stats.ts';
+import { format } from './prettier.ts';
 import {
   renderByModuleExportName,
   renderByUserPackage,
   renderReadme,
-} from './renderers';
+} from './renderers.ts';
 
 async function main() {
   const updatedAt = new Date();

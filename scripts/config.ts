@@ -1,5 +1,5 @@
 import path from 'node:path';
-import pkg from '../package.json';
+import pkg from '../package.json' with { type: 'json' };
 
 // TODO: set the module name to be analyzed
 export const targetModuleName = 'antd';
