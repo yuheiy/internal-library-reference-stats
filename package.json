@@ -7,9 +7,9 @@
   "author": "Yuhei Yasuda <yuhei.yasuda1003@gmail.com> (https://yuheiy.com/)",
   "type": "module",
   "scripts": {
-    "build": "tsx scripts/index.ts",
+    "build": "node scripts/index.ts",
     "format": "prettier . --write",
-    "test": "tsc -b && tsx --test 'scripts/**/*.test.ts'"
+    "test": "tsc --noEmit && node --test 'scripts/**/*.test.ts'"
   },
   "dependencies": {
     "@types/gitconfiglocal": "2.0.3",
@@ -25,11 +25,19 @@
     "prettier-plugin-organize-imports": "4.0.0",
     "read-package-up": "11.0.0",
     "tiny-invariant": "1.3.3",
-    "tsx": "4.17.0",
     "typescript": "5.5.4"
   },
-  "packageManager": "npm@10.8.2",
-  "engines": {
-    "node": "22"
-  }
+  "devDependencies": {
+    "@tsconfig/node-ts": "23.6.1",
+    "@tsconfig/node22": "22.0.2",
+    "@tsconfig/strictest": "2.0.5"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22.18.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "npm@10.9.3"
 }

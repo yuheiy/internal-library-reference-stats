@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import path from 'node:path';
 import test from 'node:test';
-import { analyzeModuleImports } from './import-analyzer';
+import { analyzeModuleImports } from './import-analyzer.ts';
 
 test('analyzeModuleImports', async (t) => {
   for (const [name, expected] of [

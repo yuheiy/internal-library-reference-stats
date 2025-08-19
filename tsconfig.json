@@ -1,41 +1,8 @@
 {
-  "compilerOptions": {
-    /* https://tsx.is/typescript#tsconfig-json */
-    /* Language and Environment */
-    "target": "ESNext",
-    "lib": ["ESNext"],
-    "moduleDetection": "force",
-
-    /* Modules */
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-
-    /* JavaScript Support */
-    "allowJs": true,
-
-    /* Emit */
-    "noEmit": true,
-
-    /* Interop Constraints */
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Type Checking */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-
-    /* Completeness */
-    "skipLibCheck": true
-  },
-  "exclude": ["user-repositories/**/*"]
+  "extends": [
+    "@tsconfig/strictest/tsconfig.json",
+    "@tsconfig/node22/tsconfig.json",
+    "@tsconfig/node-ts/tsconfig.json"
+  ],
+  "include": ["scripts"]
 }

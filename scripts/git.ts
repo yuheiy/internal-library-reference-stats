@@ -1,8 +1,8 @@
 import path from 'node:path';
 import pMemoize from 'p-memoize';
 import invariant from 'tiny-invariant';
-import type { LineRange } from './import-analyzer';
-import { pExec, pGitconfig } from './promise';
+import type { LineRange } from './import-analyzer.ts';
+import { pExec, pGitconfig } from './promise.ts';
 
 /**
  * @example

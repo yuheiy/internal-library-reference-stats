@@ -9,15 +9,15 @@ import {
   targetModuleTitle,
   targetModuleUrl,
   userPackageNameMap,
-} from './config';
-import { getGithubUrlFor, getRepositoryFor, getSubmodules } from './git';
-import type { LineRange } from './import-analyzer';
+} from './config.ts';
+import { getGithubUrlFor, getRepositoryFor, getSubmodules } from './git.ts';
+import type { LineRange } from './import-analyzer.ts';
 import {
   groupByModuleExportName,
   groupByUserPackage,
   type NamedImportsStat,
-} from './named-imports-stats';
-import { getDependencyVersion } from './package';
+} from './named-imports-stats.ts';
+import { getDependencyVersion } from './package.ts';
 
 async function getUserPackageName(directoryPath: string) {
   const configuredName = userPackageNameMap.get(directoryPath);
