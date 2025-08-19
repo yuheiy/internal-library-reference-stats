@@ -27,7 +27,7 @@ async function main() {
     path.join(submodulePath, '**/*.{js,ts,jsx,tsx}'),
   );
   const filePaths = (await fg.glob(filePatterns)).toSorted(comparePaths);
-  const namedImportsStats = await getNamedImportsStats(
+  const namedImportsStats = getNamedImportsStats(
     filePaths,
     targetModuleName,
   );

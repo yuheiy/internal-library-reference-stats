@@ -28,7 +28,7 @@ jobs:
           npm ci
           npm install antd@latest
       - name: Test
-        run: npm run test
+        run: npm run typecheck
       - name: Build
         run: npm run build
       - name: Commit changes

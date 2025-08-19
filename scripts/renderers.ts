@@ -11,7 +11,7 @@ import {
   userPackageNameMap,
 } from './config.ts';
 import { getGithubUrlFor, getRepositoryFor, getSubmodules } from './git.ts';
-import type { LineRange } from './import-analyzer.ts';
+import type { LineRange } from './named-imports-stats.ts';
 import {
   groupByModuleExportName,
   groupByUserPackage,
