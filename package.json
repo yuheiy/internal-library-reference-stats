@@ -13,7 +13,7 @@
     "prepare": "git submodule update --init --recursive && npm install antd@latest"
   },
   "dependencies": {
-    "@yuheiy/import-scanner": "^0.0.4",
+    "@yuheiy/import-scanner": "^0.0.5",
     "antd": "^5.27.0",
     "gitconfiglocal": "^2.1.0",
     "github-slugger": "^2.0.0",
