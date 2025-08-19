@@ -3,7 +3,7 @@
 - 対象データ
   - [yuheiy/internal-library-reference-stats-user-a](https://github.com/yuheiy/internal-library-reference-stats-user-a): [e3543db9077d8a2c6d7effde8d50c7583c7812f4](https://github.com/yuheiy/internal-library-reference-stats-user-a/commit/e3543db9077d8a2c6d7effde8d50c7583c7812f4)
   - [yuheiy/internal-library-reference-stats-user-b](https://github.com/yuheiy/internal-library-reference-stats-user-b): [5d14c5bc29b52361a7302856b04cfa9da58d4e12](https://github.com/yuheiy/internal-library-reference-stats-user-b/commit/5d14c5bc29b52361a7302856b04cfa9da58d4e12)
-- データ取得日時: 2024年8月4日 20:35:06 JST
+- データ取得日時: 2025年8月19日 12:14:19 JST
 
 ## User B (73)
 

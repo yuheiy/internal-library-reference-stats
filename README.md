@@ -5,7 +5,7 @@
 - 対象データ
   - [yuheiy/internal-library-reference-stats-user-a](https://github.com/yuheiy/internal-library-reference-stats-user-a): [e3543db9077d8a2c6d7effde8d50c7583c7812f4](https://github.com/yuheiy/internal-library-reference-stats-user-a/commit/e3543db9077d8a2c6d7effde8d50c7583c7812f4)
   - [yuheiy/internal-library-reference-stats-user-b](https://github.com/yuheiy/internal-library-reference-stats-user-b): [5d14c5bc29b52361a7302856b04cfa9da58d4e12](https://github.com/yuheiy/internal-library-reference-stats-user-b/commit/5d14c5bc29b52361a7302856b04cfa9da58d4e12)
-- データ取得日時: 2024年8月4日 20:35:06 JST
+- データ取得日時: 2025年8月19日 12:14:19 JST
 
 <!-- prettier-ignore -->
 |   | [梅](by-user-package.md#梅-56) | [白玉](by-user-package.md#白玉-43) | [酢](by-user-package.md#酢-46) | [User B](by-user-package.md#user-b-73) | 合計 |
@@ -64,6 +64,7 @@
 | [Slider](by-module-export-name.md#slider-0) | 0 | 0 | 0 | 0 | 0 |
 | [Space](by-module-export-name.md#space-2) | 0 | 0 | 1 | 1 | 2 |
 | [Spin](by-module-export-name.md#spin-0) | 0 | 0 | 0 | 0 | 0 |
+| [Splitter](by-module-export-name.md#splitter-0) | 0 | 0 | 0 | 0 | 0 |
 | [Statistic](by-module-export-name.md#statistic-1) | 1 | 0 | 0 | 0 | 1 |
 | [Steps](by-module-export-name.md#steps-2) | 1 | 0 | 1 | 0 | 2 |
 | [Switch](by-module-export-name.md#switch-1) | 0 | 1 | 0 | 0 | 1 |
@@ -79,6 +80,7 @@
 | [Tree](by-module-export-name.md#tree-0) | 0 | 0 | 0 | 0 | 0 |
 | [TreeSelect](by-module-export-name.md#treeselect-0) | 0 | 0 | 0 | 0 | 0 |
 | [Typography](by-module-export-name.md#typography-40) | 10 | 10 | 9 | 11 | 40 |
+| [unstableSetRender](by-module-export-name.md#unstablesetrender-0) | 0 | 0 | 0 | 0 | 0 |
 | [Upload](by-module-export-name.md#upload-1) | 0 | 0 | 0 | 1 | 1 |
 | [version](by-module-export-name.md#version-0) | 0 | 0 | 0 | 0 | 0 |
 | [Watermark](by-module-export-name.md#watermark-0) | 0 | 0 | 0 | 0 | 0 |
