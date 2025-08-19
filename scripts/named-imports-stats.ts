@@ -1,10 +1,14 @@
+import {
+  scanImportDeclarations,
+  type ScannedNamedImportDeclaration,
+} from '@yuheiy/import-scanner';
 import path from 'node:path';
-import pMap from 'p-map';
 import invariant from 'tiny-invariant';
 import { comparePaths } from './comparers.ts';
-import { analyzeModuleImports, type LineRange } from './import-analyzer.ts';
 import { memoizedPackageDirectory } from './package.ts';
 import { pMapGroupBy } from './promise.ts';
+
+export type LineRange = ScannedNamedImportDeclaration['line'];
 
 export type NamedImportsStat = {
   sourcePath: string;
@@ -12,22 +16,49 @@ export type NamedImportsStat = {
   lineRange: LineRange;
 };
 
-export async function getNamedImportsStats(
+export function getNamedImportsStats(
   filePaths: string[],
   targetModuleName: string,
 ) {
-  const statsChunks = await pMap(filePaths, async (filePath) => {
-    const { namedImports } = await analyzeModuleImports(
-      filePath,
-      targetModuleName,
+  const statsChunks = filePaths.map((filePath) => {
+    let importDeclarations;
+
+    try {
+      importDeclarations = scanImportDeclarations(filePath);
+    } catch (error) {
+      console.warn(
+        `Failed to scan imports in ${filePath}:`,
+        error instanceof Error ? error.message : String(error),
+      );
+      return [];
+    }
+
+    const targetImports = importDeclarations.filter(
+      (declaration) =>
+        declaration.moduleSpecifierValue === targetModuleName &&
+        declaration.details.type === 'named_imports',
     );
-    return Object.entries(namedImports).map(
-      ([moduleExportName, { lineRange }]) => ({
-        sourcePath: filePath,
-        moduleExportName,
-        lineRange,
-      }),
-    );
+
+    const stats: NamedImportsStat[] = [];
+
+    for (const importDeclaration of targetImports) {
+      const lineRange: LineRange = {
+        start: importDeclaration.line.start,
+        end: importDeclaration.line.end,
+      };
+
+      if (importDeclaration.details.type === 'named_imports') {
+        for (const element of importDeclaration.details.elements) {
+          stats.push({
+            sourcePath: filePath,
+            moduleExportName: element.moduleExportName,
+            lineRange,
+          });
+        }
+      }
+    }
+
+    return stats;
   });
 
   const result: NamedImportsStat[] = statsChunks.reduce((acc, chunk) => [
