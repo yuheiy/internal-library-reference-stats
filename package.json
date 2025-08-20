@@ -7,10 +7,11 @@
   "author": "Yuhei Yasuda <yuhei.yasuda1003@gmail.com> (https://yuheiy.com/)",
   "type": "module",
   "scripts": {
+    "prebuild": "git submodule update --remote && npm install antd@latest",
     "build": "node scripts/index.ts",
     "format": "prettier . --write",
     "typecheck": "tsc --noEmit",
-    "prepare": "git submodule update --remote --recursive && npm install antd@latest"
+    "prepare": "git submodule update --init --recursive"
   },
   "dependencies": {
     "@yuheiy/import-scanner": "^0.0.5",
