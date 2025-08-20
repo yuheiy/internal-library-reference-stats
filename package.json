@@ -10,7 +10,7 @@
     "build": "node scripts/index.ts",
     "format": "prettier . --write",
     "typecheck": "tsc --noEmit",
-    "prepare": "git submodule update --init --recursive && npm install antd@latest"
+    "prepare": "git submodule update --remote --recursive && npm install antd@latest"
   },
   "dependencies": {
     "@yuheiy/import-scanner": "^0.0.5",
